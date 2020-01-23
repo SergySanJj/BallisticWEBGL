@@ -7,8 +7,25 @@
 </head>
 <body>
 
-<canvas width="800px" height="800px"></canvas>
+<div class="container">
+    <div class="gui">
+        <div class="gui-elem">
+            <p class="labeling">gravity: <span id="gravity-display"></span></p>
+            <input type="range" min="1" max="100" id="gravity-slider">
+        </div>
 
+        <div class="gui-elem">
+            <input type="button" value="Clear" id="clear">
+        </div>
+
+        <div class="gui-elem">
+            <input type="button" value="Fire" id="fire">
+        </div>
+    </div>
+    <div class="visual">
+        <canvas width="1000px" height="800px"></canvas>
+    </div>
+</div>
 <script type="text/javascript" src="bundle.js"></script>
 </body>
 </html>

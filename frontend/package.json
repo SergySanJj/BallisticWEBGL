@@ -5,7 +5,8 @@
   "author": "Sergei Yarema",
   "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "serve": "webpack --watch"
   },
   "dependencies": {
     "css-loader": "^3.4.2",

@@ -2,3 +2,53 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
+input[type="button"] {
+    min-width: 100px;
+    min-height: 50px;
+}
+
+p, span {
+    font-size: 1.2rem;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+.gui {
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.gui-elem {
+    margin: 10px;
+}
+
+.visual {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+canvas {
+
+}
+
+.labeling {
+    width: 200px;
+}
