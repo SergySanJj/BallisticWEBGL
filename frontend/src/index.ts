@@ -1,31 +1,33 @@
-const gravitySlider = document.getElementById("gravity-slider") as HTMLInputElement;
-gravitySlider.addEventListener('input', updateGui);
-const gravityDisplay = document.getElementById("gravity-display");
+import {BallisticGUI} from './gui';
 
-export function updateGui() {
-    const newGravity = gravitySlider.value;
-    gravityDisplay.innerHTML = newGravity;
-}
+const gui = new BallisticGUI();
 
-export function clearDisplay() {
-
-}
-
-export function fireProjectile() {
-
-}
+const loc = location.hostname;
+const port = location.port;
+const socketPort = 8081;
+const socket = new WebSocket(`ws://${loc}:${socketPort}`);
 
 
-updateGui();
+socket.onopen = function () {
+    console.log("Connected to " + socketPort);
+    gui.assignSocket(socket);
+};
 
-const canvas = document.querySelector('canvas');
-const gl = canvas.getContext("webgl");
+socket.onclose = function (event) {
+    if (event.wasClean) {
+        console.log('Connection closed');
+    } else {
+        console.log('Connection broken');
+    }
+    console.log('Code: ' + event.code + ' Caused by: ' + event.reason);
+};
 
+socket.onmessage = function (event) {
+    console.log("Server: " + event.data);
+};
 
-// Set clear color to black, fully opaque
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
-// Clear the color buffer with specified clear color
-gl.clear(gl.COLOR_BUFFER_BIT);
-
+socket.onerror = function (error: ErrorEvent) {
+    console.log("Error: " + error.message);
+};
 
 

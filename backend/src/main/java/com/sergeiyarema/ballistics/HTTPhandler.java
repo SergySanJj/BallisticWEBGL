@@ -7,19 +7,17 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class HTTPServer implements Runnable {
+public class HTTPhandler implements Runnable {
     private static final File WEB_ROOT = new File("../frontend/dist/");
     private static final String DEFAULT_FILE = "index.html";
     private static final String FILE_NOT_FOUND = "404.html";
     private static final String METHOD_NOT_SUPPORTED = "not_supported.html";
 
-    public static final int PORT = 8080;
-
     private static final boolean verbose = true;
 
     private Socket connect;
 
-    HTTPServer(Socket c) {
+    HTTPhandler(Socket c) {
         connect = c;
     }
 
@@ -103,6 +101,7 @@ public class HTTPServer implements Runnable {
                 logger.log(Level.INFO, "Connection closed.\n");
             }
         }
+
     }
 
     private static void applyHeaders(PrintWriter out, int fileLength, String contentMimeType, String status) {
