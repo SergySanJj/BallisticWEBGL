@@ -9,6 +9,9 @@ export class BallisticGUI {
     private angleSlider: HTMLInputElement;
     private angleDisplay: HTMLElement;
 
+    private speedSlider: HTMLInputElement;
+    private speedDisplay: HTMLElement;
+
     private fireButton: HTMLInputElement;
     private clearButton: HTMLInputElement;
 
@@ -35,6 +38,9 @@ export class BallisticGUI {
         this.angleSlider = window.document.getElementById("angle-slider") as HTMLInputElement;
         this.angleDisplay = window.document.getElementById("angle-display");
 
+        this.speedSlider = window.document.getElementById("speed-slider") as HTMLInputElement;
+        this.speedDisplay = window.document.getElementById("speed-display");
+
         this.fireButton = window.document.getElementById('fire') as HTMLInputElement;
         this.clearButton = window.document.getElementById('clear') as HTMLInputElement;
 
@@ -49,6 +55,9 @@ export class BallisticGUI {
         this.angleSlider.addEventListener('input', () => {
             gui.updateGui()
         });
+        this.speedSlider.addEventListener('input', () => {
+            gui.updateGui()
+        });
 
         this.fireButton.addEventListener('click', () => {
             gui.fireProjectile()
@@ -61,6 +70,7 @@ export class BallisticGUI {
     public updateGui() {
         this.gravityDisplay.innerHTML = this.gravitySlider.value;
         this.angleDisplay.innerHTML = this.angleSlider.value;
+        this.speedDisplay.innerHTML = this.speedSlider.value;
         if (this.scene) {
             this.objectCount.innerHTML = this.getObjectCount().toString();
         }
@@ -89,11 +99,10 @@ export class BallisticGUI {
     }
 
     public getBallisticParams(): BallisticParams {
-        const angle = parseInt(this.angleDisplay.innerHTML);
-        const gravity = parseInt(this.gravityDisplay.innerHTML);
-        const speedX = 1;
-        const speedY = 1;
-        const bp = new BallisticParams(angle, speedX, speedY, gravity);
+        const angle = parseFloat(this.angleDisplay.innerHTML);
+        const gravity = parseFloat(this.gravityDisplay.innerHTML);
+        const speed = parseFloat(this.speedDisplay.innerHTML);
+        const bp = new BallisticParams(angle, speed, gravity);
 
         return bp;
     }

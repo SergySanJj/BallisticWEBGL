@@ -34,6 +34,7 @@ public class BallisticServer extends WebSocketServer {
 
         if (msg.message.equals("fire")) {
             BallisticParams bp = gson.fromJson(msg.data, BallisticParams.class);
+            bp.checkAndFix();
 
             int projectileId = BallisticServer.getNewId();
 

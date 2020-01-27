@@ -4,6 +4,10 @@ export class SceneObject {
     private y: number;
     private gl: WebGLRenderingContext;
 
+    private shaderProgram: any;
+
+    private shaderInit: boolean = false;
+
     constructor(x: number, y: number, id: number) {
         this.id = id;
 
@@ -17,6 +21,13 @@ export class SceneObject {
 
     public drawSelf(gl: WebGLRenderingContext) {
         this.gl = gl;
+
+        if (!this.shaderInit) {
+            this.initDrawing();
+        }
+        if (this.y < 0.0) {
+            this.y = 0.0;
+        }
         this.drawPoint();
     }
 
@@ -24,25 +35,7 @@ export class SceneObject {
         return this.id;
     }
 
-    public drawPoint() {
-        /*==========Defining and storing the geometry=======*/
-
-        const vertices = [
-            this.x, this.y, 0.0
-        ];
-
-        // Create an empty buffer object to store the vertex buffer
-        const vertex_buffer = this.gl.createBuffer();
-
-        //Bind appropriate array buffer to it
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertex_buffer);
-
-        // Pass the vertex data to the buffer
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
-
-        // Unbind the buffer
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
-
+    public initDrawing() {
         /*=========================Shaders========================*/
 
         // vertex shader source code
@@ -80,19 +73,38 @@ export class SceneObject {
 
         // Create a shader program object to store
         // the combined shader program
-        const shaderProgram = this.gl.createProgram();
+        this.shaderProgram = this.gl.createProgram();
 
         // Attach a vertex shader
-        this.gl.attachShader(shaderProgram, vertShader);
+        this.gl.attachShader(this.shaderProgram, vertShader);
 
         // Attach a fragment shader
-        this.gl.attachShader(shaderProgram, fragShader);
+        this.gl.attachShader(this.shaderProgram, fragShader);
 
         // Link both programs
-        this.gl.linkProgram(shaderProgram);
+        this.gl.linkProgram(this.shaderProgram);
 
         // Use the combined shader program object
-        this.gl.useProgram(shaderProgram);
+        this.gl.useProgram(this.shaderProgram);
+    }
+
+    public drawPoint() {
+        /*==========Defining and storing the geometry=======*/
+        const vertices = [
+            this.x * 2. - 0.9, this.y * 2. - 0.9, 0.0
+        ];
+
+        // Create an empty buffer object to store the vertex buffer
+        const vertex_buffer = this.gl.createBuffer();
+
+        //Bind appropriate array buffer to it
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertex_buffer);
+
+        // Pass the vertex data to the buffer
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
+
+        // Unbind the buffer
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
 
         /*======== Associating shaders to buffer objects ========*/
 
@@ -100,18 +112,15 @@ export class SceneObject {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertex_buffer);
 
         // Get the attribute location
-        const coord = this.gl.getAttribLocation(shaderProgram, "coordinates");
+        const coord = this.gl.getAttribLocation(this.shaderProgram, "coordinates");
 
         // Point an attribute to the currently bound VBO
-        this.gl.vertexAttribPointer(coord, 1, this.gl.FLOAT, false, 0, 0);
+        this.gl.vertexAttribPointer(coord, 3, this.gl.FLOAT, false, 0, 0);
 
         // Enable the attribute
         this.gl.enableVertexAttribArray(coord);
 
         /*============= Drawing the primitive ===============*/
-
-        // Clear the color buffer bit
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
         // Set the view port
         this.gl.viewport(0, 0, 1000, 800);

@@ -39,7 +39,7 @@ socket.onclose = function (event) {
 
 socket.onmessage = function (event) {
     const msg = JSON.parse(event.data) as Message;
-    console.log("Server message: " + msg.message);
+    // console.log("Server message: " + msg.message);
     console.log("Server data: " + msg.data);
     if (msg.message === "createBall") {
         scene.addObject(new SceneObject(0, 0, parseInt(msg.data)));
