@@ -30,24 +30,25 @@ public class ProjectileFlight implements Runnable {
 
         while (y > 0.001) {
             time += 1 / freq;
+
+            double x0 = 0.0;
+            double y0 = 0.01;
+            double z0 = 0.0;
+            double alpha = Math.toRadians(this.angle);
+            double vx = this.speed * Math.cos(alpha);
+            double vy = this.speed * Math.sin(alpha);
+            x = time * vx;
+            y = time * vy - this.gravity * time * time / 2.f;
+
+            x = x + x0;
+            y = y + y0;
+
+            Message msg = new Message("flight", gson.toJson(new FlightInfo(projectileId, x, y)));
             try {
-                double x0 = 0.0;
-                double y0 = 0.01;
-                double z0 = 0.0;
-                double alpha = Math.toRadians(this.angle);
-                double vx = this.speed * Math.cos(alpha);
-                double vy = this.speed * Math.sin(alpha);
-                x = time * vx;
-                y = time * vy - this.gravity * time * time / 2.f;
-
-                x = x + x0;
-                y = y + y0;
-
-                Message msg = new Message("flight", gson.toJson(new FlightInfo(projectileId, x, y)));
                 receiver.send(gson.toJson(msg));
                 Thread.sleep((long) (1000 / freq));
             } catch (Exception e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }

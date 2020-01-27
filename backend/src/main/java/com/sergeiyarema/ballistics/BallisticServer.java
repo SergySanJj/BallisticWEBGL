@@ -30,19 +30,22 @@ public class BallisticServer extends WebSocketServer {
     public void onMessage(WebSocket conn, String message) {
         System.out.println("received message from " + conn.getRemoteSocketAddress() + ": " + message);
 
-        Message msg = gson.fromJson(message, Message.class);
+        try {
+            Message msg = gson.fromJson(message, Message.class);
 
-        if (msg.message.equals("fire")) {
-            BallisticParams bp = gson.fromJson(msg.data, BallisticParams.class);
-            bp.checkAndFix();
+            if (msg.message.equals("fire")) {
+                BallisticParams bp = gson.fromJson(msg.data, BallisticParams.class);
+                bp.checkAndFix();
 
-            int projectileId = BallisticServer.getNewId();
+                int projectileId = BallisticServer.getNewId();
 
-            Message res = new Message("createBall", Integer.toString(projectileId));
-            conn.send(gson.toJson(res));
+                Message res = new Message("createBall", Integer.toString(projectileId));
+                conn.send(gson.toJson(res));
 
-            Thread fireThread = new Thread(new ProjectileFlight(conn, bp, projectileId));
-            fireThread.start();
+                Thread fireThread = new Thread(new ProjectileFlight(conn, bp, projectileId));
+                fireThread.start();
+            }
+        } catch (Exception e) { // pass incorrect json
         }
     }
 
