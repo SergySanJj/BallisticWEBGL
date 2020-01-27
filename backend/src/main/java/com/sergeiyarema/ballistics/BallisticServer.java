@@ -1,5 +1,6 @@
 package com.sergeiyarema.ballistics;
 
+import com.google.gson.Gson;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -8,15 +9,16 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 public class BallisticServer extends WebSocketServer {
+    private static int maxId = 0;
+    private static Gson gson = new Gson();
+
     public BallisticServer(InetSocketAddress address) {
         super(address);
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conn.send("Welcome to the server!"); //This method sends a message to the new client
-        broadcast("new connection: " + handshake.getResourceDescriptor()); //This method sends a message to all clients connected
-        System.out.println("new connection to " + conn.getRemoteSocketAddress());
+        System.out.println("New connection from " + conn.getRemoteSocketAddress());
     }
 
     @Override
@@ -27,10 +29,18 @@ public class BallisticServer extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         System.out.println("received message from " + conn.getRemoteSocketAddress() + ": " + message);
-        if (message.equals("fire")) {
-            conn.send("firing");
 
-            Thread fireThread = new Thread(new ProjectileFlight(conn, 45, 1, 1, 9));
+        Message msg = gson.fromJson(message, Message.class);
+
+        if (msg.message.equals("fire")) {
+            BallisticParams bp = gson.fromJson(msg.data, BallisticParams.class);
+
+            int projectileId = BallisticServer.getNewId();
+
+            Message res = new Message("createBall", Integer.toString(projectileId));
+            conn.send(gson.toJson(res));
+
+            Thread fireThread = new Thread(new ProjectileFlight(conn, bp, projectileId));
             fireThread.start();
         }
     }
@@ -42,12 +52,17 @@ public class BallisticServer extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        System.err.println("an error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
+        System.err.println("An error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
     }
 
     @Override
     public void onStart() {
-        System.out.println("server started successfully");
+        System.out.println("Server started successfully");
+    }
+
+    private static int getNewId() {
+        maxId++;
+        return maxId;
     }
 }
 

@@ -15,16 +15,27 @@
         </div>
 
         <div class="gui-elem">
+            <p class="labeling">angle: <span id="angle-display"></span></p>
+            <input type="range" min="1" max="90" id="angle-slider">
+        </div>
+
+        <div class="gui-elem">
             <input type="button" value="Clear" id="clear">
         </div>
 
         <div class="gui-elem">
             <input type="button" value="Fire" id="fire">
         </div>
+
+        <div class="gui-elem">
+            <span><p>Object count: </p><p id="object-count">0</p></span>
+        </div>
+
     </div>
     <div class="visual">
         <canvas width="1000px" height="800px"></canvas>
     </div>
+
 </div>
 <script type="text/javascript" src="bundle.js"></script>
 </body>
