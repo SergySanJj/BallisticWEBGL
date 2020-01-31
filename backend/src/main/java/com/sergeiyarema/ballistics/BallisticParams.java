@@ -17,7 +17,7 @@ public class BallisticParams {
         gravity = shrinkToRange(gravity, 5, 20);
     }
 
-    private static double shrinkToRange(double val, double a, double b) {
+    public static double shrinkToRange(double val, double a, double b) {
         if (val < a)
             val = a;
         else if (val > b)
