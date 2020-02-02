@@ -2,12 +2,15 @@ package com.sergeiyarema.ballistics;
 
 import java.net.ServerSocket;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HttpServer implements Runnable {
     private Logger logger = Logger.getLogger("http server");
-    private int port = 8080;
+    private int port;
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
     public static Thread createNewServerThread(int port){
         return new Thread(new HttpServer(port));
@@ -24,12 +27,11 @@ public class HttpServer implements Runnable {
             logger.log(Level.INFO,
                     "HTTP Server started.\nListening for connections on port : " + this.port + " ...\n");
 
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 HttpHandler handler = new HttpHandler(serverConnect.accept());
                 logger.log(Level.INFO, "Connecton opened. (" + new Date() + ")");
 
-                Thread thread = new Thread(handler);
-                thread.start();
+                executor.execute(handler);
             }
 
         } catch (Exception e) {

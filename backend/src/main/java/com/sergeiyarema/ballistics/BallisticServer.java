@@ -17,7 +17,7 @@ public class BallisticServer extends WebSocketServer {
     private static Gson gson = new Gson();
     private Logger logger = Logger.getLogger("Ballistic");
 
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
 
     public BallisticServer(InetSocketAddress address) {
         super(address);

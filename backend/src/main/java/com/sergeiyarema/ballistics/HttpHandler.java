@@ -92,9 +92,9 @@ public class HttpHandler implements Runnable {
         dataOut.flush();
     }
 
-    private void notSupportedRequest(PrintWriter out, BufferedOutputStream dataOut, String HTTPmethod) throws IOException {
+    private void notSupportedRequest(PrintWriter out, BufferedOutputStream dataOut, String HttpMethod) throws IOException {
         if (verbose) {
-            logger.log(Level.WARNING, String.format("501 Not Implemented : %s method.", HTTPmethod));
+            logger.log(Level.WARNING, String.format("501 Not Implemented : %s method.", HttpMethod));
         }
 
         File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);

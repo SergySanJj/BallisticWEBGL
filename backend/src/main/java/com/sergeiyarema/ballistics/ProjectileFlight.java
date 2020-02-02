@@ -64,4 +64,9 @@ public class ProjectileFlight implements Runnable {
     public double getY() {
         return y;
     }
+
+    public void setTime(double time) {
+        this.time = time;
+        updateCoords();
+    }
 }
