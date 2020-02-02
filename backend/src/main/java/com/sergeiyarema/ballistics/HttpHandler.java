@@ -7,17 +7,17 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class HTTPhandler implements Runnable {
+public class HttpHandler implements Runnable {
     private static final File WEB_ROOT = new File("../frontend/dist/");
-    private static final String DEFAULT_FILE = "index.html";
-    private static final String FILE_NOT_FOUND = "404.html";
-    private static final String METHOD_NOT_SUPPORTED = "not_supported.html";
+    public static final String DEFAULT_FILE = "index.html";
+    public static final String FILE_NOT_FOUND = "404.html";
+    public static final String METHOD_NOT_SUPPORTED = "not_supported.html";
 
     private static final boolean verbose = true;
 
     private Socket connect;
 
-    HTTPhandler(Socket c) {
+    HttpHandler(Socket c) {
         connect = c;
     }
 
@@ -71,11 +71,6 @@ public class HTTPhandler implements Runnable {
                     dataOut.write(fileData, 0, fileLength);
                     dataOut.flush();
                 }
-
-                if (verbose) {
-                    logger.log(Level.INFO, String.format("File %s of type %s returned", fileRequested, content));
-                }
-
             }
 
         } catch (FileNotFoundException fnfe) {

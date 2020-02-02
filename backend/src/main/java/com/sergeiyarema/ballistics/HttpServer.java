@@ -5,11 +5,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class HTTPserver implements Runnable {
+public class HttpServer implements Runnable {
     private Logger logger = Logger.getLogger("http server");
     private int port = 8080;
 
-    HTTPserver(int port) {
+    public static Thread createNewServerThread(int port){
+        return new Thread(new HttpServer(port));
+    }
+
+    HttpServer(int port) {
         this.port = port;
     }
 
@@ -21,7 +25,7 @@ public class HTTPserver implements Runnable {
                     "HTTP Server started.\nListening for connections on port : " + this.port + " ...\n");
 
             while (true) {
-                HTTPhandler handler = new HTTPhandler(serverConnect.accept());
+                HttpHandler handler = new HttpHandler(serverConnect.accept());
                 logger.log(Level.INFO, "Connecton opened. (" + new Date() + ")");
 
                 Thread thread = new Thread(handler);
