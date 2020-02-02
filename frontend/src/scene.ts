@@ -3,7 +3,7 @@ import {FlightInfo} from "./flightInfo";
 import {Observable} from "rxjs";
 
 export class Scene {
-    private static maxObjects = 6;
+    private static maxObjects = 3;
     private objects: Array<SceneObject> = new Array<SceneObject>();
     private gl: WebGLRenderingContext;
 

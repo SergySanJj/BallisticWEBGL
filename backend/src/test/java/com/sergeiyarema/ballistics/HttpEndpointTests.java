@@ -12,7 +12,7 @@ interface ResponseChecker {
 }
 
 public class HttpEndpointTests {
-    private static int port = 8080;
+    private static int port = ServerConfig.httpPort;
     private static String baseAddress = "http://localhost:" + Integer.toString(port) + "/";
 
     private HttpClient httpClient;

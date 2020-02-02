@@ -16,8 +16,8 @@ import static org.junit.Assert.*;
 
 public class BallisticServerTest {
     private static String serverBase = "ws://localhost:8081";
-    private static String host = "localhost";
-    private static int webSocketPort = 8081;
+    private static String host = ServerConfig.host;
+    private static int webSocketPort = ServerConfig.webSocketPort;
 
     private static Gson gson = new Gson();
 
