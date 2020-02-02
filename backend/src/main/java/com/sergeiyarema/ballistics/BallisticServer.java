@@ -7,10 +7,13 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BallisticServer extends WebSocketServer {
     private static int maxId = 0;
     private static Gson gson = new Gson();
+    private Logger logger = Logger.getLogger("Ballistic");
 
     public BallisticServer(InetSocketAddress address) {
         super(address);
@@ -18,17 +21,18 @@ public class BallisticServer extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        System.out.println("New connection from " + conn.getRemoteSocketAddress());
+        logger.log(Level.INFO, "New connection from " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println("closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
+        logger.log(Level.INFO,
+                "closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println("received message from " + conn.getRemoteSocketAddress() + ": " + message);
+        logger.log(Level.INFO, "received message from " + conn.getRemoteSocketAddress() + ": " + message);
 
         try {
             Message msg = gson.fromJson(message, Message.class);
@@ -51,17 +55,17 @@ public class BallisticServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer message) {
-        System.out.println("received ByteBuffer from " + conn.getRemoteSocketAddress());
+        logger.log(Level.INFO, "received ByteBuffer from " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        System.err.println("An error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
+        logger.log(Level.WARNING, "An error occurred on connection " + conn.getRemoteSocketAddress() + ":" + ex);
     }
 
     @Override
     public void onStart() {
-        System.out.println("Server started successfully");
+        logger.log(Level.INFO, "Server started successfully");
     }
 
     private static int getNewId() {

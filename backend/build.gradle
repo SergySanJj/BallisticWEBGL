@@ -15,4 +15,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile "org.java-websocket:Java-WebSocket:1.4.0"
     implementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation 'org.awaitility:awaitility:4.0.2'
 }
