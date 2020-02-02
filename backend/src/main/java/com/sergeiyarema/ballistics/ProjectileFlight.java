@@ -56,4 +56,12 @@ public class ProjectileFlight implements Runnable {
         x = x + x0;
         y = y + y0;
     }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
 }

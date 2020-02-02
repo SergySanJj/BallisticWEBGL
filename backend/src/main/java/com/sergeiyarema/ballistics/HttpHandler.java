@@ -42,18 +42,7 @@ public class HttpHandler implements Runnable {
             fileRequested = parse.nextToken().toLowerCase();
 
             if (!HTTPmethod.equals("GET") && !HTTPmethod.equals("HEAD")) {
-                if (verbose) {
-                    logger.log(Level.WARNING, String.format("501 Not Implemented : %s method.", HTTPmethod));
-                }
-
-                File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);
-                int fileLength = (int) file.length();
-                String contentMimeType = "text/html";
-                byte[] fileData = readFileData(file, fileLength);
-
-                applyHeaders(out, fileLength, contentMimeType, "HTTP/1.1 501 Not Implemented");
-                dataOut.write(fileData, 0, fileLength);
-                dataOut.flush();
+                notSupportedRequest(out, dataOut, HTTPmethod);
 
             } else {
                 if (fileRequested.endsWith("/")) {
@@ -65,11 +54,7 @@ public class HttpHandler implements Runnable {
                 String content = getContentType(fileRequested);
 
                 if (HTTPmethod.equals("GET")) { // GET method so we return content
-                    byte[] fileData = readFileData(file, fileLength);
-
-                    applyHeaders(out, fileLength, content, "HTTP/1.1 200 OK");
-                    dataOut.write(fileData, 0, fileLength);
-                    dataOut.flush();
+                    sendFileData(out, dataOut, file, fileLength, content, "HTTP/1.1 200 OK");
                 }
             }
 
@@ -97,6 +82,25 @@ public class HttpHandler implements Runnable {
             }
         }
 
+    }
+
+    private void sendFileData(PrintWriter out, BufferedOutputStream dataOut, File file, int fileLength, String content, String s) throws IOException {
+        byte[] fileData = readFileData(file, fileLength);
+
+        applyHeaders(out, fileLength, content, s);
+        dataOut.write(fileData, 0, fileLength);
+        dataOut.flush();
+    }
+
+    private void notSupportedRequest(PrintWriter out, BufferedOutputStream dataOut, String HTTPmethod) throws IOException {
+        if (verbose) {
+            logger.log(Level.WARNING, String.format("501 Not Implemented : %s method.", HTTPmethod));
+        }
+
+        File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);
+        int fileLength = (int) file.length();
+        String contentMimeType = "text/html";
+        sendFileData(out, dataOut, file, fileLength, contentMimeType, "HTTP/1.1 501 Not Implemented");
     }
 
     private static void applyHeaders(PrintWriter out, int fileLength, String contentMimeType, String status) {

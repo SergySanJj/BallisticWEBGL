@@ -7,6 +7,8 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +16,8 @@ public class BallisticServer extends WebSocketServer {
     private static int maxId = 0;
     private static Gson gson = new Gson();
     private Logger logger = Logger.getLogger("Ballistic");
+
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
 
     public BallisticServer(InetSocketAddress address) {
         super(address);
@@ -46,8 +50,7 @@ public class BallisticServer extends WebSocketServer {
                 Message res = new Message("createBall", Integer.toString(projectileId));
                 conn.send(gson.toJson(res));
 
-                Thread fireThread = new Thread(new ProjectileFlight(conn, bp, projectileId));
-                fireThread.start();
+                executor.execute(new ProjectileFlight(conn, bp, projectileId));
             }
         } catch (Exception e) { // pass incorrect json
         }

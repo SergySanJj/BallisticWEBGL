@@ -14,7 +14,7 @@ public class BallisticParams {
     public void checkAndFix() {
         angle = shrinkToRange(angle, 1, 90);
         speed = shrinkToRange(speed, 0.5, 2.5);
-        gravity = shrinkToRange(gravity, 5, 20);
+        gravity = shrinkToRange(gravity, 5., 20.);
     }
 
     public static double shrinkToRange(double val, double a, double b) {
